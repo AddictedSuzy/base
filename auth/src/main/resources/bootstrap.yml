@@ -1,0 +1,14 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: auth
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        ext-config[0]:
+          data-id: auth-1.yaml
