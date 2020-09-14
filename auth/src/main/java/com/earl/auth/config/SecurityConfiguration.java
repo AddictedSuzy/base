@@ -1,6 +1,7 @@
 package com.earl.auth.config;
 
 import com.earl.auth.filter.VerificationCodeFilter;
+import com.earl.auth.handler.DefaultAuthenticationEntryPoint;
 import com.earl.auth.handler.DefaultLogoutSuccessHandler;
 import com.earl.auth.handler.LoginFailureHandler;
 import com.earl.auth.handler.LoginSuccessHandler;
@@ -34,6 +35,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     DBUserDetailService dbUserDetailService;
+
+    @Autowired
+    DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
 
 //    @Resource
 //    VerificationCodeFilter verificationCodeFilter;
@@ -81,7 +85,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest().authenticated()   // 任何请求都需要授权
                 .and()
-                .csrf().disable();   // 关闭跨站请求伪造防护
+                .csrf().disable() // 关闭跨站请求伪造防护
+                .exceptionHandling()
+                .authenticationEntryPoint(defaultAuthenticationEntryPoint);  // 匿名用户默认拦截
+
 
         // 在用户名密码验证之前加上图形验证码验证
 //        http.addFilterBefore(verificationCodeFilter, UsernamePasswordAuthenticationFilter.class);
