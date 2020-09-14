@@ -24,13 +24,15 @@ public class DBUserDetailServiceImpl implements DBUserDetailService {
             // TODO: 2020/9/1 添加用户权限 以及 账户状态信息
             user = new User(account.getUsername(), passwordEncoder.encode(account.getPassword()), account.getAuthorities());
         }
+
+        System.out.println("user::" + user);
         return user;
     }
 
     @Override
     public Account queryUserByUsername(String username) {
         if(username.equals("root")){
-            return null;
+            return new Account(username, "123456", AuthorityUtils.commaSeparatedStringToAuthorityList("user"));
         }
         // 这里需要添加权限
         return new Account(username, "123456", AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));

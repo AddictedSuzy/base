@@ -10,11 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@Component
+@Component
 public class VerificationCodeFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        String code = httpServletRequest.getParameter("captcha");
+        String code = httpServletRequest.getParameter("code");
+        if(code == null || code.equals("123")){
+            httpServletResponse.setContentType("application/json;charset=utf-8");
+            httpServletResponse.getWriter().write("验证码错误");
+        }
+
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

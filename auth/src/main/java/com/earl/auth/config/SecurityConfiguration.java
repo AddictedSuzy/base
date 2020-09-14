@@ -83,6 +83,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/**",
                         "/v2/api-docs") // swagger路径放行
                 .permitAll()
+                .antMatchers("/admin/**").hasRole("admin")
+                .antMatchers("/user/**").hasAnyAuthority("user")
                 .anyRequest().authenticated()   // 任何请求都需要授权
                 .and()
                 .csrf().disable() // 关闭跨站请求伪造防护
