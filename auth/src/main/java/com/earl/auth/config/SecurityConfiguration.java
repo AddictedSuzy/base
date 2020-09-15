@@ -39,8 +39,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
 
-//    @Resource
-//    VerificationCodeFilter verificationCodeFilter;
+    @Resource
+    VerificationCodeFilter verificationCodeFilter;
 
     @Autowired
     private DataSource dataSource;
@@ -49,8 +49,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin()
-                .loginPage("/login.html")   // 登录表单地址
-                .loginProcessingUrl("/authentication/form") // 处理表单请求的url，配置了这个地址，
+//                .loginPage("/login.html")   // 登录表单地址
+//                .loginProcessingUrl("/authentication/form") // 处理表单请求的url，配置了这个地址，
                                                             // spring security会拦截该地址并对其进行用户名和密码校验
                                                             // 即使自定义了该路径的controller，在没有登陆的情况下，不会路由到该controller
                 .defaultSuccessUrl("/welcome")  // 默认的登陆成功跳转页面
@@ -73,7 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .and()
                 .authorizeRequests()    // 对请求进行授权
-                .antMatchers("/login.html")
+                .antMatchers("/login")
                 .permitAll()
                 // ant匹配模式，使用*匹配0或任意多的字符，使用**匹配任意的路径
                 .antMatchers(
@@ -93,7 +93,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
         // 在用户名密码验证之前加上图形验证码验证
-//        http.addFilterBefore(verificationCodeFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(verificationCodeFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 //    @Override
