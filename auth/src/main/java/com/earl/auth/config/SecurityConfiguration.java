@@ -1,5 +1,6 @@
 package com.earl.auth.config;
 
+import com.earl.auth.filter.UsernamePasswordFilter;
 import com.earl.auth.filter.VerificationCodeFilter;
 import com.earl.auth.handler.DefaultAuthenticationEntryPoint;
 import com.earl.auth.handler.DefaultLogoutSuccessHandler;
@@ -41,6 +42,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Resource
     VerificationCodeFilter verificationCodeFilter;
+
+    @Resource
+    UsernamePasswordFilter usernamePasswordFilter;
 
     @Autowired
     private DataSource dataSource;
@@ -93,7 +97,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
         // 在用户名密码验证之前加上图形验证码验证
-        http.addFilterBefore(verificationCodeFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(verificationCodeFilter, UsernamePasswordAuthenticationFilter.class);
+        // 替换原有的用户名密码验证，改成json传值方式并验证验证码
+        http.addFilterAt(usernamePasswordFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 //    @Override
