@@ -43,9 +43,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource
     VerificationCodeFilter verificationCodeFilter;
 
-    @Resource
-    UsernamePasswordFilter usernamePasswordFilter;
-
     @Autowired
     private DataSource dataSource;
 
@@ -57,13 +54,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .loginProcessingUrl("/authentication/form") // 处理表单请求的url，配置了这个地址，
                                                             // spring security会拦截该地址并对其进行用户名和密码校验
                                                             // 即使自定义了该路径的controller，在没有登陆的情况下，不会路由到该controller
-                .defaultSuccessUrl("/welcome")  // 默认的登陆成功跳转页面
-                .failureForwardUrl("/fail") // 认证失败的页面
+//                 // 当我们自定义一个AuthenticationFilter的时候，下面的配置在这里配将不会生效，需要在新的bean里面配置
+//                .defaultSuccessUrl("/welcome")  // 默认的登陆成功跳转页面
+//                .failureForwardUrl("/fail") // 认证失败的页面
 //                .usernameParameter("username1") // 修改默认的接收用户名的参数
 //                .passwordParameter("password1") // 修改默认的接收密码的参数
-                .failureHandler(loginFailureHandler)   // 登陆失败
-                .successHandler(loginSuccessHandler)   // 登陆成功
-                .permitAll()
+//                .failureHandler(loginFailureHandler)   // 登陆失败
+//                .successHandler(loginSuccessHandler)   // 登陆成功
+//                .permitAll()
                 .and()
                 .rememberMe()
                 .tokenValiditySeconds(60 * 60)
@@ -99,7 +97,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 在用户名密码验证之前加上图形验证码验证
 //        http.addFilterBefore(verificationCodeFilter, UsernamePasswordAuthenticationFilter.class);
         // 替换原有的用户名密码验证，改成json传值方式并验证验证码
-        http.addFilterAt(usernamePasswordFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(buildUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    UsernamePasswordFilter buildUsernamePasswordFilter() throws Exception {
+        UsernamePasswordFilter filter = new UsernamePasswordFilter();
+        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setAuthenticationFailureHandler(loginFailureHandler);
+        filter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        filter.setFilterProcessesUrl("/login");
+        return filter;
     }
 
 //    @Override

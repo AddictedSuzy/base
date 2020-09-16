@@ -1,22 +1,19 @@
 package com.earl.auth.filter;
 
-import com.alibaba.fastjson.JSONObject;
+import com.earl.auth.entity.LoginRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
 
-@Component
 public class UsernamePasswordFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
@@ -27,22 +24,17 @@ public class UsernamePasswordFilter extends UsernamePasswordAuthenticationFilter
         }
         String verifyCode = (String) request.getSession().getAttribute("verifyCode");
         if (request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE) || request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
-                StringBuilder responseStrBuilder = new StringBuilder();
-                String inputStr;
-                while((inputStr = streamReader.readLine()) != null) {
-                    responseStrBuilder.append(inputStr);
-                    jsonObject = JSONObject.parseObject(responseStrBuilder.toString());
-                }
+            ObjectMapper mapper = new ObjectMapper();
+            LoginRequest loginRequest;
+            try (InputStream jsons = request.getInputStream()){
+                loginRequest = mapper.readValue(jsons, LoginRequest.class);
             } catch (IOException e) {
                 throw new AuthenticationServiceException("获取请求参数失败");
             }
-            String code = jsonObject.getString("code");
+            String code = loginRequest.getCode();
             checkCode(response, code, verifyCode);
-            String username = jsonObject.getString(getUsernameParameter());
-            String password = jsonObject.getString(getPasswordParameter());
+            String username = loginRequest.getUsername();
+            String password = loginRequest.getPassword();
 
             if (username == null) {
                 username = "";

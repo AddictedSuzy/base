@@ -16,7 +16,7 @@ public class DefaultAuthenticationEntryPoint implements AuthenticationEntryPoint
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");
         PrintWriter out = response.getWriter();
-        out.write("尚未登录");
+        out.write("尚未登录" + authException);
         out.flush();
         out.close();
     }
