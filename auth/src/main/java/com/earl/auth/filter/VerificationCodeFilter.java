@@ -15,15 +15,16 @@ public class VerificationCodeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("here111" + request.getServletPath());
-        if(request.getServletPath().equals("/login")) {
-            String code = request.getParameter("code");
-            if (code == null || code.equals("1")) {
-                response.getWriter().write("wrong code");
-            }else {
-                filterChain.doFilter(request, response);
-            }
-        }else {
-            filterChain.doFilter(request, response);
-        }
+//        if(request.getServletPath().equals("/login")) {
+//            String code = request.getParameter("code");
+//            if (code == null || code.equals("1")) {
+//                response.getWriter().write("wrong code");
+//            }else {
+//                filterChain.doFilter(request, response);
+//            }
+//        }else {
+//            filterChain.doFilter(request, response);
+//        }
+        filterChain.doFilter(request, response);
     }
 }
