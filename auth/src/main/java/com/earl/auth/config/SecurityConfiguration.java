@@ -67,6 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(60 * 60)
                 .userDetailsService(dbUserDetailService)
                 .tokenRepository(persistentTokenRepository())
+                .key("earl")
                 .and()
                 .logout()   // 开启注销
                 .logoutSuccessHandler(defaultLogoutSuccessHandler) // 注销成功
