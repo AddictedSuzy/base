@@ -18,8 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.session.FindByIndexNameSessionRepository;
-import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+//import org.springframework.session.FindByIndexNameSessionRepository;
+//import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -48,8 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Resource
-    FindByIndexNameSessionRepository sessionRepository;
+//    @Resource
+//    FindByIndexNameSessionRepository sessionRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -101,8 +101,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .maximumSessions(1)
-                .maxSessionsPreventsLogin(true) // 当session达到最大值时，是否保留登录
-                .sessionRegistry(sessionRegistry());    // 最大存在的session数量，即最多同时登陆的账户数
+                .maxSessionsPreventsLogin(true); // 当session达到最大值时，是否保留登录
+//                .sessionRegistry(sessionRegistry());    // 最大存在的session数量，即最多同时登陆的账户数
 //                .authenticationEntryPoint(defaultAuthenticationEntryPoint);  // 匿名用户默认拦截
 
 
@@ -112,10 +112,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        http.addFilterAt(buildUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean
-    SpringSessionBackedSessionRegistry sessionRegistry() {
-        return new SpringSessionBackedSessionRegistry(sessionRepository);
-    }
+//    @Bean
+//    SpringSessionBackedSessionRegistry sessionRegistry() {
+//        return new SpringSessionBackedSessionRegistry(sessionRepository);
+//    }
 
 //    @Bean
 //    UsernamePasswordFilter buildUsernamePasswordFilter() throws Exception {

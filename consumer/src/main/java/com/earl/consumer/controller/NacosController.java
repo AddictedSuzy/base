@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RefreshScope
+//@RefreshScope
 public class NacosController {
 
-    @Value("${user.age}")
+//    @Value("${user.age}")
     private String config;
 
     @RequestMapping("/getConfig")
@@ -20,5 +20,10 @@ public class NacosController {
     @RequestMapping("/remote")
     public String remote(){
         return "remote";
+    }
+
+    @RequestMapping("/errors")
+    public int error(){
+        return 1/0;
     }
 }
